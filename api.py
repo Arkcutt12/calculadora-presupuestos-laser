@@ -40,6 +40,9 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Adapta el nuevo formato del frontend al formato esperado por laser_agent
     """
+    if not data:
+        raise ValueError("Datos del formulario vacíos")
+    
     # Si ya tiene el formato antiguo, devolverlo tal como está
     if "Cliente" in data and "Pedido" in data:
         return data
@@ -50,18 +53,20 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
         "Pedido": {}
     }
     
-    # Adaptar información del cliente
-    if "cliente" in data and data["cliente"]:
+    # Adaptar información del cliente - con validación robusta
+    if "cliente" in data and data["cliente"] is not None:
         cliente_data = data["cliente"]
         adapted["Cliente"] = {
-            "Nombre y Apellidos": cliente_data.get("nombre_completo", ""),
-            "Mail": cliente_data.get("email", ""),
-            "Número de Teléfono": cliente_data.get("telefono", "")
+            "Nombre y Apellidos": cliente_data.get("nombre_completo", "") if isinstance(cliente_data, dict) else "",
+            "Mail": cliente_data.get("email", "") if isinstance(cliente_data, dict) else "",
+            "Número de Teléfono": cliente_data.get("telefono", "") if isinstance(cliente_data, dict) else ""
         }
     
-    # Adaptar información del pedido
-    if "pedido" in data and data["pedido"]:
+    # Adaptar información del pedido - con validación robusta
+    if "pedido" in data and data["pedido"] is not None:
         pedido_data = data["pedido"]
+        if not isinstance(pedido_data, dict):
+            raise ValueError("Formato de pedido inválido")
         
         # Información básica del pedido
         adapted["Pedido"] = {
@@ -73,34 +78,50 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
             "Solicitud urgente": pedido_data.get("servicio_urgente", "no") == "sí"
         }
         
-        # Información del material
-        if "detalles_material" in pedido_data:
+        # Información del material - con validación
+        if "detalles_material" in pedido_data and pedido_data["detalles_material"] is not None:
             material_details = pedido_data["detalles_material"]
-            adapted["Pedido"]["¿Quién proporciona el material?"] = {
-                "proveedor": pedido_data.get("quien_proporciona_material", ""),
-                "Material seleccionado": material_details.get("material", ""),
-                "Grosor": f"{material_details.get('grosor', '')}mm",
-                "Color": material_details.get("color", "")
-            }
-        
-        # Adaptar capas
-        if "capas" in pedido_data:
-            adapted_capas = []
-            for capa in pedido_data["capas"]:
-                adapted_capa = {
-                    "nombre": capa.get("nombre", ""),
-                    "vectores": capa.get("vectores", 0),
-                    "longitud_mm": capa.get("longitud_mm", 0),
-                    "longitud_m": capa.get("longitud_mm", 0) / 1000,  # Convertir mm a m
-                    "area_material": capa.get("area_material", 0)
+            if isinstance(material_details, dict):
+                adapted["Pedido"]["¿Quién proporciona el material?"] = {
+                    "proveedor": pedido_data.get("quien_proporciona_material", ""),
+                    "Material seleccionado": material_details.get("material", ""),
+                    "Grosor": f"{material_details.get('grosor', '')}mm",
+                    "Color": material_details.get("color", "")
                 }
-                adapted_capas.append(adapted_capa)
-            
-            adapted["Pedido"]["Capas"] = adapted_capas
         
-        # Información de recogida
-        if "datos_recogida" in pedido_data:
+        # Adaptar capas - con validación
+        if "capas" in pedido_data and pedido_data["capas"] is not None:
+            if isinstance(pedido_data["capas"], list):
+                adapted_capas = []
+                for capa in pedido_data["capas"]:
+                    if capa is not None and isinstance(capa, dict):
+                        longitud_mm = capa.get("longitud_mm", 0)
+                        # Asegurar que longitud_mm es un número
+                        if longitud_mm is None:
+                            longitud_mm = 0
+                        try:
+                            longitud_mm = float(longitud_mm)
+                        except (ValueError, TypeError):
+                            longitud_mm = 0
+                            
+                        adapted_capa = {
+                            "nombre": capa.get("nombre", ""),
+                            "vectores": capa.get("vectores", 0),
+                            "longitud_mm": longitud_mm,
+                            "longitud_m": longitud_mm / 1000,  # Convertir mm a m
+                            "area_material": capa.get("area_material", 0)
+                        }
+                        adapted_capas.append(adapted_capa)
+                
+                adapted["Pedido"]["Capas"] = adapted_capas
+        
+        # Información de recogida - con validación
+        if "datos_recogida" in pedido_data and pedido_data["datos_recogida"] is not None:
             adapted["Pedido"]["Datos Recogida"] = pedido_data["datos_recogida"]
+    
+    # Validar que tenemos los datos mínimos necesarios
+    if not adapted["Pedido"].get("¿Quién proporciona el material?"):
+        raise ValueError("Información del material requerida")
     
     return adapted
 
