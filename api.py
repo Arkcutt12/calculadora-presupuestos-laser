@@ -81,7 +81,7 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
         adapted["Pedido"]["¿Quién proporciona el material?"] = {
             "proveedor": "Arkcutt",
             "Material seleccionado": pedido_data.get("material_seleccionado", "Contrachapado"),
-            "Grosor": "4mm",
+            "Grosor": "4",
             "Color": "light-wood"
         }
         
@@ -120,7 +120,7 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
         adapted["Pedido"]["¿Quién proporciona el material?"] = {
             "proveedor": "Arkcutt",
             "Material seleccionado": "Contrachapado", 
-            "Grosor": "4mm",
+            "Grosor": "4",
             "Color": "light-wood"
         }
     
