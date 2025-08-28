@@ -1,0 +1,29 @@
+{
+  "material": "MDF",
+  "grosor": 2.5,
+  "color": "Natural",
+  "material_area_m2": 0.5,
+  "layers": [
+    {
+      "name": "Corte Exterior",
+      "type": "cut_outside",
+      "length_m": 1.8
+    },
+    {
+      "name": "Corte Interior",
+      "type": "cut_inside",
+      "length_m": 0.9
+    },
+    {
+      "name": "Grabado Lineal",
+      "type": "engrave_outline",
+      "length_m": 0.6
+    },
+    {
+      "name": "Grabado Interno (Relleno)",
+      "type": "engrave_fill",
+      "area_m2": 0.02,
+      "hatch_spacing_mm": 0.25
+    }
+  ]
+}
