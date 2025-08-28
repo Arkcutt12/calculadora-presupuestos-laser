@@ -76,15 +76,14 @@ def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
             "Solicitud urgente": pedido_data.get("servicio_urgente", "no") == "sí"
         }
         
-        # Información del material - estructura específica del frontend
-        detalles_material = pedido_data.get("detalles_material")
-        if detalles_material is not None and isinstance(detalles_material, dict):
-            adapted["Pedido"]["¿Quién proporciona el material?"] = {
-                "proveedor": pedido_data.get("quien_proporciona_material", ""),
-                "Material seleccionado": detalles_material.get("material", ""),
-                "Grosor": f"{detalles_material.get('grosor', '')}mm",
-                "Color": detalles_material.get("color", "")
-            }
+        # Información del material - BASADA EN TU ESTRUCTURA REAL
+        # Tu frontend NO envía detalles_material, necesitamos valores por defecto
+        adapted["Pedido"]["¿Quién proporciona el material?"] = {
+            "proveedor": "Arkcutt",
+            "Material seleccionado": pedido_data.get("material_seleccionado", "Contrachapado"),
+            "Grosor": "4mm",
+            "Color": "light-wood"
+        }
         
         # Adaptar capas del frontend
         capas_data = pedido_data.get("capas")
