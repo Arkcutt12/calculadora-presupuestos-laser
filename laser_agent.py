@@ -401,12 +401,37 @@ Parametros de corte:
         """Calcula presupuesto basado en JSON del formulario frontend"""
         
         try:
-            pedido = frontend_data.get('Pedido', {})
+            # Validación inicial
+            if not frontend_data or not isinstance(frontend_data, dict):
+                return {
+                    'error': 'Datos del frontend vacíos o inválidos',
+                    'materiales_disponibles': self.get_available_materials()
+                }
             
-            # Extraer información del material
-            material_info_raw = pedido.get('¿Quién proporciona el material?', {})
+            pedido = frontend_data.get('Pedido')
+            if pedido is None:
+                return {
+                    'error': 'Sección Pedido no encontrada en los datos',
+                    'materiales_disponibles': self.get_available_materials()
+                }
+            
+            # Extraer información del material con validación robusta
+            material_info_raw = pedido.get('¿Quién proporciona el material?')
+            if material_info_raw is None:
+                return {
+                    'error': 'Información del material no encontrada',
+                    'materiales_disponibles': self.get_available_materials()
+                }
+            
+            # Validar que material_info_raw sea un diccionario
+            if not isinstance(material_info_raw, dict):
+                return {
+                    'error': f'Formato de material inválido: {type(material_info_raw)}',
+                    'materiales_disponibles': self.get_available_materials()
+                }
+            
             material_name = self._normalize_material_name(material_info_raw.get('Material seleccionado', ''))
-            grosor_str = material_info_raw.get('Grosor', '').replace('mm', '').strip()
+            grosor_str = str(material_info_raw.get('Grosor', '')).replace('mm', '').strip()
             grosor = float(grosor_str) if grosor_str else 0
             color = self._normalize_color_name(material_info_raw.get('Color', ''))
             
@@ -414,18 +439,30 @@ Parametros de corte:
             area_string = pedido.get('Area material', '0 mm²')
             material_area_m2 = self._extract_area_from_string(area_string)
             
-            # Procesar capas DXF
+            # Procesar capas DXF con validación
             capas_dxf = pedido.get('Capas', [])
+            if not isinstance(capas_dxf, list):
+                capas_dxf = []
+                
             layers = []
             
             for capa in capas_dxf:
+                if capa is None or not isinstance(capa, dict):
+                    continue
+                    
                 layer_type = self._map_layer_name_to_type(capa.get('nombre', ''))
                 longitud_m = capa.get('longitud_m', 0)
                 
+                # Asegurar que longitud_m sea un número
+                try:
+                    longitud_m = float(longitud_m) if longitud_m is not None else 0
+                except (ValueError, TypeError):
+                    longitud_m = 0
+                
                 layer = {
-                    'name': capa.get('nombre', ''),
+                    'name': str(capa.get('nombre', '')),
                     'type': layer_type,
-                    'length_m': float(longitud_m)
+                    'length_m': longitud_m
                 }
                 
                 # Para grabado de relleno, necesitamos área
@@ -452,11 +489,14 @@ Parametros de corte:
             
             # Añadir información adicional del frontend
             if 'error' not in budget_result:
+                analisis_dxf = pedido.get('Análisis DXF', {})
+                calidad_archivo = analisis_dxf.get('Calidad del archivo', {}) if isinstance(analisis_dxf, dict) else {}
+                
                 budget_result['frontend_info'] = {
                     'numero_solicitud': pedido.get('Número de solicitud', ''),
                     'cliente': frontend_data.get('Cliente', {}),
                     'longitud_total_mm': pedido.get('Longitud vector total', ''),
-                    'calidad_archivo': pedido.get('Análisis DXF', {}).get('Calidad del archivo', {}),
+                    'calidad_archivo': calidad_archivo,
                     'recogida': pedido.get('Datos Recogida', {}),
                     'urgente': pedido.get('Solicitud urgente', False)
                 }
@@ -464,6 +504,9 @@ Parametros de corte:
             return budget_result
             
         except Exception as e:
+            import traceback
+            error_trace = traceback.format_exc()
+            print(f"[ERROR] Traceback completo en calculate_budget_from_frontend: {error_trace}")
             return {
                 'error': f'Error procesando JSON del frontend: {str(e)}',
                 'materiales_disponibles': self.get_available_materials()

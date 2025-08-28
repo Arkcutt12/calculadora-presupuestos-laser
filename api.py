@@ -181,12 +181,17 @@ async def calculate_budget(formulario_data: FormularioData):
     try:
         # Convertir a diccionario para usar con laser_agent
         data_dict = formulario_data.dict()
+        print(f"[DEBUG] Datos recibidos del frontend: {data_dict}")
         
         # Adaptar formato del frontend al formato interno
+        print(f"[DEBUG] Iniciando adaptación del formato...")
         adapted_data = adapt_frontend_format(data_dict)
+        print(f"[DEBUG] Datos adaptados: {adapted_data}")
         
         # Calcular presupuesto usando el agente
+        print(f"[DEBUG] Iniciando cálculo de presupuesto...")
         budget_result = laser_agent.calculate_budget_from_frontend(adapted_data)
+        print(f"[DEBUG] Resultado del cálculo: {budget_result}")
         
         if 'error' in budget_result:
             return PresupuestoResponse(
@@ -201,9 +206,17 @@ async def calculate_budget(formulario_data: FormularioData):
         )
         
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error interno calculando presupuesto: {str(e)}"
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"[DEBUG] Error completo: {error_trace}")
+        
+        return PresupuestoResponse(
+            success=False,
+            error=f"Error procesando JSON del frontend: {str(e)}",
+            data={
+                "error": f"Error procesando JSON del frontend: {str(e)}",
+                "materiales_disponibles": laser_agent.get_available_materials()
+            }
         )
 
 @app.post("/calculate/pdf")
