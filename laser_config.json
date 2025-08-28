@@ -5,7 +5,7 @@
     {
       "material": "MDF",
       "grosor": 2.5,
-      "color": "Madera clara",
+      "color": "light-wood",
       "precio_plancha": 4.76,
       "tamaño_plancha": 0.6,
       "dimensiones_plancha_mm": { "ancho": 1000, "alto": 600 },
@@ -20,7 +20,7 @@
     {
       "material": "MDF",
       "grosor": 4,
-      "color": "Madera clara",
+      "color": "light-wood",
       "precio_plancha": 11.56,
       "tamaño_plancha": 0.72,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 600 },
@@ -80,7 +80,7 @@
     {
       "material": "Contrachapado",
       "grosor": 3,
-      "color": "Madera clara",
+      "color": "light-wood",
       "precio_plancha": 18.00,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
@@ -95,7 +95,7 @@
     {
       "material": "Contrachapado",
       "grosor": 4,
-      "color": "Madera clara",
+      "color": "light-wood",
       "precio_plancha": 21.50,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
@@ -110,7 +110,7 @@
     {
       "material": "Contrachapado",
       "grosor": 6,
-      "color": "Madera clara",
+      "color": "light-wood",
       "precio_plancha": 25.00,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
@@ -125,7 +125,7 @@
     {
       "material": "Contrachapado",
       "grosor": 3,
-      "color": "Madera oscura",
+      "color": "dark-wood",
       "precio_plancha": 20.0,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
@@ -140,7 +140,7 @@
     {
       "material": "Contrachapado",
       "grosor": 4,
-      "color": "Madera oscura",
+      "color": "dark-wood",
       "precio_plancha": 23.5,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
@@ -155,7 +155,7 @@
     {
       "material": "Contrachapado",
       "grosor": 6,
-      "color": "Madera oscura",
+      "color": "dark-wood",
       "precio_plancha": 27.0,
       "tamaño_plancha": 1.44,
       "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
