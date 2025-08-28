@@ -36,10 +36,83 @@ app.add_middleware(
 # Instancia global del agente láser
 laser_agent = LaserCuttingAgent()
 
+def adapt_frontend_format(data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Adapta el nuevo formato del frontend al formato esperado por laser_agent
+    """
+    # Si ya tiene el formato antiguo, devolverlo tal como está
+    if "Cliente" in data and "Pedido" in data:
+        return data
+    
+    # Adaptar formato nuevo
+    adapted = {
+        "Cliente": {},
+        "Pedido": {}
+    }
+    
+    # Adaptar información del cliente
+    if "cliente" in data and data["cliente"]:
+        cliente_data = data["cliente"]
+        adapted["Cliente"] = {
+            "Nombre y Apellidos": cliente_data.get("nombre_completo", ""),
+            "Mail": cliente_data.get("email", ""),
+            "Número de Teléfono": cliente_data.get("telefono", "")
+        }
+    
+    # Adaptar información del pedido
+    if "pedido" in data and data["pedido"]:
+        pedido_data = data["pedido"]
+        
+        # Información básica del pedido
+        adapted["Pedido"] = {
+            "Número de solicitud": data.get("numero_solicitud", ""),
+            "Fecha de solicitud": data.get("fecha_solicitud", ""),
+            "Material seleccionado": pedido_data.get("material_seleccionado", ""),
+            "Longitud vector total": f"{pedido_data.get('longitud_vector_total_metros', 0)} m",
+            "Area material": f"{pedido_data.get('area_material', 0)} mm²",
+            "Solicitud urgente": pedido_data.get("servicio_urgente", "no") == "sí"
+        }
+        
+        # Información del material
+        if "detalles_material" in pedido_data:
+            material_details = pedido_data["detalles_material"]
+            adapted["Pedido"]["¿Quién proporciona el material?"] = {
+                "proveedor": pedido_data.get("quien_proporciona_material", ""),
+                "Material seleccionado": material_details.get("material", ""),
+                "Grosor": f"{material_details.get('grosor', '')}mm",
+                "Color": material_details.get("color", "")
+            }
+        
+        # Adaptar capas
+        if "capas" in pedido_data:
+            adapted_capas = []
+            for capa in pedido_data["capas"]:
+                adapted_capa = {
+                    "nombre": capa.get("nombre", ""),
+                    "vectores": capa.get("vectores", 0),
+                    "longitud_mm": capa.get("longitud_mm", 0),
+                    "longitud_m": capa.get("longitud_mm", 0) / 1000,  # Convertir mm a m
+                    "area_material": capa.get("area_material", 0)
+                }
+                adapted_capas.append(adapted_capa)
+            
+            adapted["Pedido"]["Capas"] = adapted_capas
+        
+        # Información de recogida
+        if "datos_recogida" in pedido_data:
+            adapted["Pedido"]["Datos Recogida"] = pedido_data["datos_recogida"]
+    
+    return adapted
+
 class FormularioData(BaseModel):
     """Modelo para recibir datos del formulario frontend"""
-    Cliente: Dict[str, Any]
-    Pedido: Dict[str, Any]
+    Cliente: Optional[Dict[str, Any]] = None
+    Pedido: Optional[Dict[str, Any]] = None
+    cliente: Optional[Dict[str, Any]] = None
+    pedido: Optional[Dict[str, Any]] = None
+    numero_solicitud: Optional[str] = None
+    fecha_solicitud: Optional[str] = None
+    analisis_backend: Optional[Dict[str, Any]] = None
 
 class PresupuestoResponse(BaseModel):
     """Modelo de respuesta para el presupuesto calculado"""
@@ -86,8 +159,11 @@ async def calculate_budget(formulario_data: FormularioData):
         # Convertir a diccionario para usar con laser_agent
         data_dict = formulario_data.dict()
         
+        # Adaptar formato del frontend al formato interno
+        adapted_data = adapt_frontend_format(data_dict)
+        
         # Calcular presupuesto usando el agente
-        budget_result = laser_agent.calculate_budget_from_frontend(data_dict)
+        budget_result = laser_agent.calculate_budget_from_frontend(adapted_data)
         
         if 'error' in budget_result:
             return PresupuestoResponse(
