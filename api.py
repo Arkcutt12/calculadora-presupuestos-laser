@@ -232,9 +232,16 @@ async def calculate_budget_with_pdf(formulario_data: FormularioData):
         
         # Verificar si ya tiene el formato correcto (Cliente, Pedido)
         if "Cliente" in data_dict and "Pedido" in data_dict:
+            print("[PDF] Usando formato directo (Cliente/Pedido)")
             # Formato correcto - usar calculate_budget_from_job directamente
-            budget_result = laser_agent.calculate_budget_from_job(data_dict)
+            try:
+                budget_result = laser_agent.calculate_budget_from_job(data_dict)
+            except Exception as job_error:
+                print(f"[PDF] Error con calculate_budget_from_job: {job_error}")
+                # Fallback al método frontend si falla el directo
+                budget_result = laser_agent.calculate_budget_from_frontend(data_dict)
         else:
+            print("[PDF] Usando formato con adaptador (cliente/pedido)")
             # Formato antiguo - usar con adaptador
             budget_result = laser_agent.calculate_budget_from_frontend(data_dict)
         
