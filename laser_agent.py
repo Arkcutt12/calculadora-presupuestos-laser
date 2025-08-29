@@ -584,9 +584,6 @@ Parametros de corte:
         if 'error' in budget_data:
             raise ValueError(budget_data['error'])
 
-        # Debug: Imprimir datos que llegan al PDF
-        print(f"[DEBUG PDF] frontend_info: {budget_data.get('frontend_info', {})}")
-
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -596,16 +593,26 @@ Parametros de corte:
         cliente_info = budget_data.get('frontend_info', {}).get('Cliente', {})
         pedido_info = budget_data.get('frontend_info', {}).get('Pedido', {})
         numero_presupuesto = pedido_info.get('Número de solicitud', 'PRESUPUESTO')
-        
-        print(f"[DEBUG PDF] cliente_info: {cliente_info}")
-        print(f"[DEBUG PDF] numero_presupuesto: {numero_presupuesto}")
 
         # Logo (lado izquierdo) - Usar imagen real
         try:
-            pdf.image("logo_makosite.png", x=20, y=20, w=15)
+            # Intentar encontrar el logo en la misma carpeta que el script
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            logo_path = os.path.join(script_dir, "logo_makosite.png")
+            if os.path.exists(logo_path):
+                pdf.image(logo_path, x=20, y=20, w=15)
+            else:
+                # Fallback: dibujar logo simple
+                pdf.rect(20, 25, 15, 10)
+                pdf.line(20, 25, 27.5, 20)
+                pdf.line(27.5, 20, 35, 25)
+                pdf.rect(27.5, 25, 7.5, 10, style='F')
         except Exception:
-            # Fallback si no encuentra la imagen
+            # Fallback si hay cualquier error con la imagen
             pdf.rect(20, 25, 15, 10)
+            pdf.line(20, 25, 27.5, 20)
+            pdf.line(27.5, 20, 35, 25)
+            pdf.rect(27.5, 25, 7.5, 10, style='F')
         
         # Header - Datos empresa (lado derecho)
         pdf.set_font("Arial", "B", 10)
