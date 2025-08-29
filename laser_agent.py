@@ -493,8 +493,9 @@ Parametros de corte:
                 calidad_archivo = analisis_dxf.get('Calidad del archivo', {}) if isinstance(analisis_dxf, dict) else {}
                 
                 budget_result['frontend_info'] = {
+                    'Cliente': frontend_data.get('Cliente', {}),
+                    'Pedido': frontend_data.get('Pedido', {}),
                     'numero_solicitud': pedido.get('Número de solicitud', ''),
-                    'cliente': frontend_data.get('Cliente', {}),
                     'longitud_total_mm': pedido.get('Longitud vector total', ''),
                     'calidad_archivo': calidad_archivo,
                     'recogida': pedido.get('Datos Recogida', {}),
@@ -583,6 +584,9 @@ Parametros de corte:
         if 'error' in budget_data:
             raise ValueError(budget_data['error'])
 
+        # Debug: Imprimir datos que llegan al PDF
+        print(f"[DEBUG PDF] frontend_info: {budget_data.get('frontend_info', {})}")
+
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
@@ -592,6 +596,9 @@ Parametros de corte:
         cliente_info = budget_data.get('frontend_info', {}).get('Cliente', {})
         pedido_info = budget_data.get('frontend_info', {}).get('Pedido', {})
         numero_presupuesto = pedido_info.get('Número de solicitud', 'PRESUPUESTO')
+        
+        print(f"[DEBUG PDF] cliente_info: {cliente_info}")
+        print(f"[DEBUG PDF] numero_presupuesto: {numero_presupuesto}")
 
         # Logo (lado izquierdo) - Usar imagen real
         try:
@@ -625,9 +632,9 @@ Parametros de corte:
         pdf.cell(0, 4, f"Vencimiento: {fecha_vencimiento}", 0, 1, "R")
         pdf.ln(5)
 
-        # Calcular totales primero para usarlos en ambos lugares
+        # Calcular totales primero usando datos reales del budget_data
         tiempo_corte = budget_data.get('tiempo_corte_minutos', 0)
-        precio_minuto = budget_data.get('tarifa_por_minuto', 0.6)
+        precio_minuto = self.config.get('tarifa_por_minuto', 0.8)  # Usar tarifa real del config
         coste_corte = budget_data.get('coste_corte', 0)
         coste_material = budget_data.get('coste_material', 0)
         subtotal_sin_iva = coste_corte + coste_material
@@ -636,8 +643,11 @@ Parametros de corte:
         iva_total = base_imponible * 0.21
         total_final = base_imponible + iva_total
 
-        # Datos del cliente
+        # Datos del cliente - usar datos reales del frontend
         cliente_nombre = cliente_info.get('Nombre y Apellidos', 'Cliente')
+        if not cliente_nombre or cliente_nombre == 'Cliente':
+            # Fallback si no hay datos del cliente
+            cliente_nombre = 'Cliente'
         pdf.set_font("Arial", "B", 10)
         pdf.cell(0, 6, cliente_nombre, 0, 1, "L")
         pdf.set_font("Arial", size=10) 
