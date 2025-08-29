@@ -579,102 +579,141 @@ Parametros de corte:
         }
 
     def generate_pdf_quote(self, budget_data: Dict[str, Any], output_path: str) -> str:
-        """Genera un PDF con el presupuesto y lo guarda en output_path"""
+        """Genera un PDF con el presupuesto replicando exactamente el diseño de MAKOSITE"""
         if 'error' in budget_data:
             raise ValueError(budget_data['error'])
 
         pdf = FPDF()
         pdf.add_page()
         pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.set_font("Arial", size=10)
 
-        # Intentar usar fuente Unicode (DejaVuSans.ttf en el directorio del script)
-        script_dir = os.path.dirname(__file__)
-        font_path = os.path.join(script_dir, "DejaVuSans.ttf")
-        unicode_font = False
-        try:
-            if os.path.exists(font_path):
-                pdf.add_font("DejaVu", "", font_path, uni=True)
-                pdf.set_font("DejaVu", "B", 16)
-                unicode_font = True
-            else:
-                pdf.set_font("Helvetica", "B", 16)
-        except Exception:
-            pdf.set_font("Helvetica", "B", 16)
+        # Obtener datos del cliente y pedido
+        cliente_info = budget_data.get('frontend_info', {}).get('Cliente', {})
+        pedido_info = budget_data.get('frontend_info', {}).get('Pedido', {})
+        numero_presupuesto = pedido_info.get('Número de solicitud', 'PRESUPUESTO')
 
-        def sanitize(text: str) -> str:
-            if unicode_font:
-                return text
-            # Sin fuente Unicode: reemplazar euro y eliminar acentos/emoji
-            text = text.replace("€", "EUR")
-            text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
-            return text
+        # Header - Logo y datos empresa (lado derecho)
+        pdf.set_font("Arial", "B", 10)
+        pdf.cell(0, 5, "Asociación Junior Empresa MAKOSITE", 0, 1, "R")
+        pdf.set_font("Arial", size=10)
+        pdf.cell(0, 5, "G72660145", 0, 1, "R")
+        pdf.cell(0, 5, "Carrer Ciutat d'Asución 16", 0, 1, "R") 
+        pdf.cell(0, 5, "Barcelona (08030), Barcelona, España", 0, 1, "R")
+        pdf.ln(5)
 
-        # Encabezado
-        pdf.cell(0, 10, sanitize("Presupuesto Corte Láser"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        # Línea separadora
+        pdf.line(20, pdf.get_y(), 190, pdf.get_y())
+        pdf.ln(8)
 
-        if unicode_font:
-            pdf.set_font("DejaVu", size=10)
-        else:
-            pdf.set_font("Helvetica", size=10)
-        pdf.cell(0, 6, sanitize(f"Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(4)
-
-        # Detalles del material y parámetros
-        if unicode_font:
-            pdf.set_font("DejaVu", "B", 12)
-        else:
-            pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(0, 8, sanitize("Detalles del trabajo"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        if unicode_font:
-            pdf.set_font("DejaVu", size=11)
-        else:
-            pdf.set_font("Helvetica", size=11)
-        mat = budget_data['material']
-        pdf.cell(0, 6, sanitize(f"Material: {mat['material']} {mat['grosor']}mm {mat['color']}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        # Número de presupuesto y fechas
+        pdf.set_font("Arial", "B", 14)
+        pdf.cell(100, 8, f"PRESUPUESTO #{numero_presupuesto}", 0, 0, "L")
         
-        # Mostrar parámetros según el formato disponible
-        pc = budget_data.get('parametros_corte', {})
-        if isinstance(pc, dict) and 'cut' in pc:
-            cut_info = pc['cut']
-            pdf.cell(0, 6, sanitize(f"Corte - Velocidad: {cut_info.get('velocidad', 'N/A')} | Potencia: {cut_info.get('potencia', 'N/A')} | Aire: {cut_info.get('aire', 'N/A')}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            if 'engrave' in pc:
-                engrave_info = pc['engrave']
-                engrave_text = f"Grabado - Velocidad: {engrave_info.get('velocidad', 'N/A')} | Potencia: {engrave_info.get('potencia', 'N/A')} | Aire: {engrave_info.get('aire', 'N/A')}"
-                if 'hatch_spacing_mm' in engrave_info:
-                    engrave_text += f" | Hatch: {engrave_info['hatch_spacing_mm']}"
-                pdf.cell(0, 6, sanitize(engrave_text), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        else:
-            pdf.cell(0, 6, sanitize(f"Velocidad: {pc.get('velocidad', 'N/A')} | Potencia: {pc.get('potencia', 'N/A')} | Aire: {pc.get('fuerza_aire', 'N/A')}"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.ln(2)
+        pdf.set_font("Arial", size=10)
+        fecha_hoy = datetime.now().strftime("%d/%m/%Y")
+        fecha_vencimiento = datetime.now().replace(day=datetime.now().day + 15).strftime("%d/%m/%Y")
+        pdf.cell(0, 4, f"Fecha: {fecha_hoy}", 0, 1, "R")
+        pdf.cell(0, 4, f"Vencimiento: {fecha_vencimiento}", 0, 1, "R")
+        pdf.ln(5)
 
-        # Costes
-        if unicode_font:
-            pdf.set_font("DejaVu", "B", 12)
-        else:
-            pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(0, 8, sanitize("Costes"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        if unicode_font:
-            pdf.set_font("DejaVu", size=11)
-        else:
-            pdf.set_font("Helvetica", size=11)
-        pdf.cell(0, 6, sanitize(f"Tiempo de corte: {budget_data['tiempo_corte_minutos']} min"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, sanitize(f"Coste de corte: {budget_data['coste_corte']} €"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, sanitize(f"Coste de material: {budget_data['coste_material']} €"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, sanitize(f"Subtotal: {budget_data['subtotal']} €"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, sanitize(f"Margen ({self.config['margen_beneficio']}%): {budget_data['margen_beneficio']} €"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        if unicode_font:
-            pdf.set_font("DejaVu", "B", 12)
-        else:
-            pdf.set_font("Helvetica", "B", 12)
-        pdf.cell(0, 8, sanitize(f"TOTAL: {budget_data['total']} €"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+        # Datos del cliente
+        cliente_nombre = cliente_info.get('Nombre y Apellidos', 'Cliente')
+        pdf.set_font("Arial", "B", 10)
+        pdf.cell(0, 6, cliente_nombre, 0, 1, "L")
+        pdf.set_font("Arial", size=10) 
+        pdf.cell(100, 6, "España", 0, 0, "L")
+        
+        # Total destacado (lado derecho)
+        pdf.set_font("Arial", "B", 18)
+        total_euros = f"{budget_data['total']:.2f}€"
+        pdf.cell(0, 6, f"Total {total_euros}", 0, 1, "R")
+        pdf.ln(8)
 
-        # Nota legal básica
-        if unicode_font:
-            pdf.set_font("DejaVu", size=9)
-        else:
-            pdf.set_font("Helvetica", size=9)
-        pdf.ln(6)
-        pdf.multi_cell(0, 5, sanitize("Observaciones: Este presupuesto es orientativo y válido por 30 días. No incluye impuestos salvo indicación expresa."))
+        # Línea separadora
+        pdf.line(20, pdf.get_y(), 190, pdf.get_y())
+        pdf.ln(8)
+
+        # Tabla de conceptos - Headers
+        pdf.set_font("Arial", "B", 10)
+        pdf.cell(80, 8, "CONCEPTO", 1, 0, "C")
+        pdf.cell(20, 8, "PRECIO", 1, 0, "C") 
+        pdf.cell(20, 8, "UNIDADES", 1, 0, "C")
+        pdf.cell(25, 8, "SUBTOTAL", 1, 0, "C")
+        pdf.cell(15, 8, "IVA", 1, 0, "C")
+        pdf.cell(25, 8, "TOTAL", 1, 1, "C")
+
+        pdf.set_font("Arial", size=9)
+
+        # Servicio corte láser
+        tiempo_corte = budget_data.get('tiempo_corte_minutos', 0)
+        precio_minuto = budget_data.get('tarifa_por_minuto', 0.6)
+        coste_corte = budget_data.get('coste_corte', 0)
+        coste_corte_con_iva = coste_corte * 1.21
+
+        pdf.cell(80, 6, "Servicio corte láser - Barcelona", 1, 0, "L")
+        pdf.cell(20, 6, f"{precio_minuto:.2f}€", 1, 0, "C")
+        pdf.cell(20, 6, str(int(tiempo_corte)), 1, 0, "C")
+        pdf.cell(25, 6, f"{coste_corte:.2f}€", 1, 0, "C")
+        pdf.cell(15, 6, "21%", 1, 0, "C")
+        pdf.cell(25, 6, f"{coste_corte_con_iva:.2f}€", 1, 1, "C")
+
+        pdf.cell(80, 4, "Aquí se presupuesta los minutos de corte láser", 1, 0, "L")
+        pdf.cell(105, 4, "", 1, 1, "C")
+
+        # Material (si hay coste de material)
+        coste_material = budget_data.get('coste_material', 0)
+        if coste_material > 0:
+            material_info = budget_data.get('material', {})
+            material_nombre = f"Tablero {material_info.get('material', 'Material')} {material_info.get('color', '')}"
+            grosor_info = f"{material_info.get('grosor', '')}mm grosor"
+            coste_material_con_iva = coste_material * 1.21
+            
+            # Calcular precio unitario asumiendo 1 unidad por ahora
+            precio_unitario = coste_material
+            unidades = 1
+            
+            pdf.cell(80, 6, material_nombre, 1, 0, "L")
+            pdf.cell(20, 6, f"{precio_unitario:.2f}€", 1, 0, "C")
+            pdf.cell(20, 6, str(unidades), 1, 0, "C")
+            pdf.cell(25, 6, f"{coste_material:.2f}€", 1, 0, "C")
+            pdf.cell(15, 6, "21%", 1, 0, "C")
+            pdf.cell(25, 6, f"{coste_material_con_iva:.2f}€", 1, 1, "C")
+
+            pdf.cell(80, 4, grosor_info, 1, 0, "L")
+            pdf.cell(105, 4, "", 1, 1, "C")
+
+        pdf.ln(5)
+
+        # Resumen final
+        subtotal_sin_iva = coste_corte + coste_material
+        descuento = 0  # Por ahora sin descuento
+        base_imponible = subtotal_sin_iva - descuento
+        iva_total = base_imponible * 0.21
+        total_final = base_imponible + iva_total
+
+        pdf.set_font("Arial", "B", 10)
+        if descuento > 0:
+            pdf.cell(0, 6, f"DESCUENTO 10 %", 0, 0, "R")
+            pdf.cell(25, 6, f"{descuento:.2f}€", 0, 1, "R")
+
+        pdf.cell(0, 6, "BASE IMPONIBLE", 0, 0, "R")
+        pdf.cell(25, 6, f"{base_imponible:.2f}€", 0, 1, "R")
+
+        pdf.cell(0, 6, "IVA 21%", 0, 0, "R") 
+        pdf.cell(25, 6, f"{iva_total:.2f}€", 0, 1, "R")
+
+        pdf.cell(0, 8, "TOTAL", 0, 0, "R")
+        pdf.cell(25, 8, f"{total_final:.2f}€", 0, 1, "R")
+
+        # Footer con datos bancarios
+        pdf.ln(10)
+        pdf.set_font("Arial", size=8)
+        pdf.cell(0, 5, "Pagar por transferencia bancaria al siguiente número de cuenta: ES55 2100 0859 2102 0090 5852", 0, 1, "C")
+        
+        # Número de página
+        pdf.set_y(-20)
+        pdf.cell(0, 10, "1/1", 0, 0, "C")
 
         pdf.output(output_path)
         return output_path

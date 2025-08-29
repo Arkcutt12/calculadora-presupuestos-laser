@@ -251,7 +251,8 @@ async def calculate_budget_with_pdf(formulario_data: FormularioData):
             os.unlink(pdf_path)
             
             # Generar nombre de archivo basado en número de solicitud
-            numero_solicitud = budget_result.get('frontend_info', {}).get('numero_solicitud', 'presupuesto')
+            pedido_info = budget_result.get('frontend_info', {}).get('Pedido', {})
+            numero_solicitud = pedido_info.get('Número de solicitud', 'presupuesto')
             filename = f"presupuesto_{numero_solicitud}.pdf"
             
             return Response(
