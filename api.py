@@ -221,17 +221,24 @@ async def calculate_budget(formulario_data: FormularioData):
 @app.post("/calculate/pdf")
 async def calculate_budget_with_pdf(formulario_data: FormularioData):
     """
-    Calcular presupuesto y generar PDF
+    Calcular presupuesto y generar PDF DIRECTO sin adaptador
     
-    Similar a /calculate pero además genera un PDF del presupuesto
-    y lo devuelve como descarga
+    Usa los datos tal como vienen del frontend en formato correcto
     """
     try:
-        # Convertir a diccionario para usar con laser_agent
+        # Convertir a diccionario
         data_dict = formulario_data.dict()
+        print(f"[PDF] Datos recibidos: {data_dict}")
         
-        # Calcular presupuesto
-        budget_result = laser_agent.calculate_budget_from_frontend(data_dict)
+        # Verificar si ya tiene el formato correcto (Cliente, Pedido)
+        if "Cliente" in data_dict and "Pedido" in data_dict:
+            # Formato correcto - usar calculate_budget_from_job directamente
+            budget_result = laser_agent.calculate_budget_from_job(data_dict)
+        else:
+            # Formato antiguo - usar con adaptador
+            budget_result = laser_agent.calculate_budget_from_frontend(data_dict)
+        
+        print(f"[PDF] Resultado cálculo: {budget_result}")
         
         if 'error' in budget_result:
             raise HTTPException(
@@ -251,8 +258,7 @@ async def calculate_budget_with_pdf(formulario_data: FormularioData):
             os.unlink(pdf_path)
             
             # Generar nombre de archivo basado en número de solicitud
-            pedido_info = budget_result.get('frontend_info', {}).get('Pedido', {})
-            numero_solicitud = pedido_info.get('Número de solicitud', 'presupuesto')
+            numero_solicitud = data_dict.get('Pedido', {}).get('Número de solicitud', 'presupuesto')
             filename = f"presupuesto_{numero_solicitud}.pdf"
             
             return Response(
@@ -262,6 +268,10 @@ async def calculate_budget_with_pdf(formulario_data: FormularioData):
             )
             
     except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"[PDF] Error completo: {error_trace}")
+        
         raise HTTPException(
             status_code=500,
             detail=f"Error generando PDF: {str(e)}"
