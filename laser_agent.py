@@ -385,11 +385,11 @@ Parametros de corte:
         
         # Mapear colores del frontend a colores en configuración
         color_mapping = {
-            'light-wood': 'Madera clara',
-            'dark-wood': 'Madera oscura',
-            'natural': 'Madera clara',
-            'madera-clara': 'Madera clara',
-            'madera-oscura': 'Madera oscura',
+            'light-wood': 'light-wood',
+            'dark-wood': 'dark-wood', 
+            'madera-clara': 'light-wood',
+            'madera-oscura': 'dark-wood',
+            'natural': 'light-wood',
             'transparente': 'Transparente',
             'negro': 'Negro',
             'blanco': 'Blanco'
