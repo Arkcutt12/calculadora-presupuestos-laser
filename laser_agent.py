@@ -665,9 +665,10 @@ Parametros de corte:
         print(f"[PDF DEBUG] coste_corte: {coste_corte}")
         print(f"[PDF DEBUG] coste_material: {coste_material}")
         print(f"[PDF DEBUG] material_info: {material_info}")
-        subtotal_sin_iva = coste_corte + coste_material
+        # Usar el total ya calculado del presupuesto que incluye margen
+        total_sin_iva = budget_data.get('total', 0)  # Este ya incluye margen
         descuento = 0  # Por ahora sin descuento
-        base_imponible = subtotal_sin_iva - descuento
+        base_imponible = total_sin_iva - descuento
         iva_total = base_imponible * 0.21
         total_final = base_imponible + iva_total
 
