@@ -593,7 +593,14 @@ Parametros de corte:
         pedido_info = budget_data.get('frontend_info', {}).get('Pedido', {})
         numero_presupuesto = pedido_info.get('Número de solicitud', 'PRESUPUESTO')
 
-        # Header - Logo y datos empresa (lado derecho)
+        # Logo (lado izquierdo) - Usar imagen real
+        try:
+            pdf.image("logo_makosite.png", x=20, y=20, w=15)
+        except Exception:
+            # Fallback si no encuentra la imagen
+            pdf.rect(20, 25, 15, 10)
+        
+        # Header - Datos empresa (lado derecho)
         pdf.set_font("Arial", "B", 10)
         pdf.cell(0, 5, "Asociación Junior Empresa MAKOSITE", 0, 1, "R")
         pdf.set_font("Arial", size=10)
@@ -611,11 +618,23 @@ Parametros de corte:
         pdf.cell(100, 8, f"PRESUPUESTO #{numero_presupuesto}", 0, 0, "L")
         
         pdf.set_font("Arial", size=10)
+        from datetime import timedelta
         fecha_hoy = datetime.now().strftime("%d/%m/%Y")
-        fecha_vencimiento = datetime.now().replace(day=datetime.now().day + 15).strftime("%d/%m/%Y")
+        fecha_vencimiento = (datetime.now() + timedelta(days=15)).strftime("%d/%m/%Y")
         pdf.cell(0, 4, f"Fecha: {fecha_hoy}", 0, 1, "R")
         pdf.cell(0, 4, f"Vencimiento: {fecha_vencimiento}", 0, 1, "R")
         pdf.ln(5)
+
+        # Calcular totales primero para usarlos en ambos lugares
+        tiempo_corte = budget_data.get('tiempo_corte_minutos', 0)
+        precio_minuto = budget_data.get('tarifa_por_minuto', 0.6)
+        coste_corte = budget_data.get('coste_corte', 0)
+        coste_material = budget_data.get('coste_material', 0)
+        subtotal_sin_iva = coste_corte + coste_material
+        descuento = 0  # Por ahora sin descuento
+        base_imponible = subtotal_sin_iva - descuento
+        iva_total = base_imponible * 0.21
+        total_final = base_imponible + iva_total
 
         # Datos del cliente
         cliente_nombre = cliente_info.get('Nombre y Apellidos', 'Cliente')
@@ -624,9 +643,9 @@ Parametros de corte:
         pdf.set_font("Arial", size=10) 
         pdf.cell(100, 6, "España", 0, 0, "L")
         
-        # Total destacado (lado derecho)
+        # Total destacado (lado derecho) - USAR EL TOTAL CALCULADO
         pdf.set_font("Arial", "B", 18)
-        total_euros = f"{budget_data['total']:.2f}€"
+        total_euros = f"{total_final:.2f}EUR"
         pdf.cell(0, 6, f"Total {total_euros}", 0, 1, "R")
         pdf.ln(8)
 
@@ -645,24 +664,20 @@ Parametros de corte:
 
         pdf.set_font("Arial", size=9)
 
-        # Servicio corte láser
-        tiempo_corte = budget_data.get('tiempo_corte_minutos', 0)
-        precio_minuto = budget_data.get('tarifa_por_minuto', 0.6)
-        coste_corte = budget_data.get('coste_corte', 0)
+        # Servicio corte láser - usar variables ya calculadas
         coste_corte_con_iva = coste_corte * 1.21
 
         pdf.cell(80, 6, "Servicio corte láser - Barcelona", 1, 0, "L")
-        pdf.cell(20, 6, f"{precio_minuto:.2f}€", 1, 0, "C")
+        pdf.cell(20, 6, f"{precio_minuto:.2f}EUR", 1, 0, "C")
         pdf.cell(20, 6, str(int(tiempo_corte)), 1, 0, "C")
-        pdf.cell(25, 6, f"{coste_corte:.2f}€", 1, 0, "C")
+        pdf.cell(25, 6, f"{coste_corte:.2f}EUR", 1, 0, "C")
         pdf.cell(15, 6, "21%", 1, 0, "C")
-        pdf.cell(25, 6, f"{coste_corte_con_iva:.2f}€", 1, 1, "C")
+        pdf.cell(25, 6, f"{coste_corte_con_iva:.2f}EUR", 1, 1, "C")
 
         pdf.cell(80, 4, "Aquí se presupuesta los minutos de corte láser", 1, 0, "L")
         pdf.cell(105, 4, "", 1, 1, "C")
 
-        # Material (si hay coste de material)
-        coste_material = budget_data.get('coste_material', 0)
+        # Material (si hay coste de material) - usar variable ya calculada
         if coste_material > 0:
             material_info = budget_data.get('material', {})
             material_nombre = f"Tablero {material_info.get('material', 'Material')} {material_info.get('color', '')}"
@@ -674,37 +689,47 @@ Parametros de corte:
             unidades = 1
             
             pdf.cell(80, 6, material_nombre, 1, 0, "L")
-            pdf.cell(20, 6, f"{precio_unitario:.2f}€", 1, 0, "C")
+            pdf.cell(20, 6, f"{precio_unitario:.2f}EUR", 1, 0, "C")
             pdf.cell(20, 6, str(unidades), 1, 0, "C")
-            pdf.cell(25, 6, f"{coste_material:.2f}€", 1, 0, "C")
+            pdf.cell(25, 6, f"{coste_material:.2f}EUR", 1, 0, "C")
             pdf.cell(15, 6, "21%", 1, 0, "C")
-            pdf.cell(25, 6, f"{coste_material_con_iva:.2f}€", 1, 1, "C")
+            pdf.cell(25, 6, f"{coste_material_con_iva:.2f}EUR", 1, 1, "C")
 
             pdf.cell(80, 4, grosor_info, 1, 0, "L")
             pdf.cell(105, 4, "", 1, 1, "C")
 
         pdf.ln(5)
 
-        # Resumen final
-        subtotal_sin_iva = coste_corte + coste_material
-        descuento = 0  # Por ahora sin descuento
-        base_imponible = subtotal_sin_iva - descuento
-        iva_total = base_imponible * 0.21
-        total_final = base_imponible + iva_total
-
+        # Resumen final - usar variables ya calculadas
         pdf.set_font("Arial", "B", 10)
+        
+        # Posicionar en la parte derecha para el resumen
+        start_x = 140  # Posición X para etiquetas
+        value_x = 165  # Posición X para valores
+        
         if descuento > 0:
-            pdf.cell(0, 6, f"DESCUENTO 10 %", 0, 0, "R")
-            pdf.cell(25, 6, f"{descuento:.2f}€", 0, 1, "R")
+            pdf.set_xy(start_x, pdf.get_y())
+            pdf.cell(25, 6, "DESCUENTO 10 %", 0, 0, "L")
+            pdf.set_xy(value_x, pdf.get_y())
+            pdf.cell(25, 6, f"{descuento:.2f}EUR", 0, 1, "R")
 
-        pdf.cell(0, 6, "BASE IMPONIBLE", 0, 0, "R")
-        pdf.cell(25, 6, f"{base_imponible:.2f}€", 0, 1, "R")
+        # BASE IMPONIBLE
+        pdf.set_xy(start_x, pdf.get_y())
+        pdf.cell(25, 6, "BASE IMPONIBLE", 0, 0, "L")
+        pdf.set_xy(value_x, pdf.get_y())
+        pdf.cell(25, 6, f"{base_imponible:.2f}EUR", 0, 1, "R")
 
-        pdf.cell(0, 6, "IVA 21%", 0, 0, "R") 
-        pdf.cell(25, 6, f"{iva_total:.2f}€", 0, 1, "R")
+        # IVA 21%
+        pdf.set_xy(start_x, pdf.get_y())
+        pdf.cell(25, 6, "IVA 21%", 0, 0, "L")
+        pdf.set_xy(value_x, pdf.get_y())
+        pdf.cell(25, 6, f"{iva_total:.2f}EUR", 0, 1, "R")
 
-        pdf.cell(0, 8, "TOTAL", 0, 0, "R")
-        pdf.cell(25, 8, f"{total_final:.2f}€", 0, 1, "R")
+        # TOTAL
+        pdf.set_xy(start_x, pdf.get_y())
+        pdf.cell(25, 8, "TOTAL", 0, 0, "L")
+        pdf.set_xy(value_x, pdf.get_y())
+        pdf.cell(25, 8, f"{total_final:.2f}EUR", 0, 1, "R")
 
         # Footer con datos bancarios
         pdf.ln(10)
