@@ -70,6 +70,22 @@ class LaserCuttingAgent:
         self.config_file = config_file
         self.config = self.load_config()
     
+    def _safe_float(self, value, default=0.0):
+        """Convierte un valor a float de forma segura, manejando 'No especificado' y otros casos"""
+        if value is None:
+            return default
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            value = value.strip()
+            if value.lower() in ['no especificado', 'n/a', '', 'none', 'null']:
+                return default
+            try:
+                return float(value)
+            except ValueError:
+                return default
+        return default
+    
     def load_config(self) -> Dict[str, Any]:
         """Carga la configuración desde archivo JSON o usa la configuración por defecto"""
         try:
@@ -331,7 +347,7 @@ Parametros de corte:
             match = re.search(r'([\d.,]+)\s*(mm.?²?|m.?²?)', area_string, re.IGNORECASE)
             if match:
                 valor_str = match.group(1).replace(',', '.')
-                valor = float(valor_str)
+                valor = self._safe_float(valor_str, 0)
                 unidad = match.group(2).lower()
                 
                 # Convertir mm² a m²
@@ -432,7 +448,7 @@ Parametros de corte:
             
             material_name = self._normalize_material_name(material_info_raw.get('Material seleccionado', ''))
             grosor_str = str(material_info_raw.get('Grosor', '')).replace('mm', '').strip()
-            grosor = float(grosor_str) if grosor_str else 0
+            grosor = self._safe_float(grosor_str, 0)
             color = self._normalize_color_name(material_info_raw.get('Color', ''))
             
             # Extraer área del material
@@ -453,11 +469,8 @@ Parametros de corte:
                 layer_type = self._map_layer_name_to_type(capa.get('nombre', ''))
                 longitud_m = capa.get('longitud_m', 0)
                 
-                # Asegurar que longitud_m sea un número
-                try:
-                    longitud_m = float(longitud_m) if longitud_m is not None else 0
-                except (ValueError, TypeError):
-                    longitud_m = 0
+                # Asegurar que longitud_m sea un número usando conversión segura
+                longitud_m = self._safe_float(longitud_m, 0)
                 
                 layer = {
                     'name': str(capa.get('nombre', '')),
@@ -644,6 +657,14 @@ Parametros de corte:
         precio_minuto = self.config.get('tarifa_por_minuto', 0.8)  # Usar tarifa real del config
         coste_corte = budget_data.get('coste_corte', 0)
         coste_material = budget_data.get('coste_material', 0)
+        material_info = budget_data.get('material', {})
+        
+        # Debug temporal
+        print(f"[PDF DEBUG] tiempo_corte: {tiempo_corte}")
+        print(f"[PDF DEBUG] precio_minuto: {precio_minuto}") 
+        print(f"[PDF DEBUG] coste_corte: {coste_corte}")
+        print(f"[PDF DEBUG] coste_material: {coste_material}")
+        print(f"[PDF DEBUG] material_info: {material_info}")
         subtotal_sin_iva = coste_corte + coste_material
         descuento = 0  # Por ahora sin descuento
         base_imponible = subtotal_sin_iva - descuento
