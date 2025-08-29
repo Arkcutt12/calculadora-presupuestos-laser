@@ -705,6 +705,7 @@ Parametros de corte:
         # Servicio corte láser - usar variables ya calculadas
         coste_corte_con_iva = coste_corte * 1.21
 
+        print(f"[PDF DEBUG] Escribiendo servicio: precio={precio_minuto}, tiempo={tiempo_corte}, coste={coste_corte}")
         pdf.cell(80, 6, "Servicio corte láser - Barcelona", 1, 0, "L")
         pdf.cell(20, 6, f"{precio_minuto:.2f}EUR", 1, 0, "C")
         pdf.cell(20, 6, str(int(tiempo_corte)), 1, 0, "C")
@@ -717,7 +718,8 @@ Parametros de corte:
 
         # Material (si hay coste de material) - usar variable ya calculada
         if coste_material > 0:
-            material_info = budget_data.get('material', {})
+            # Usar material_info que ya obtuvimos arriba
+            pass  # material_info ya está definido
             material_nombre = f"Tablero {material_info.get('material', 'Material')} {material_info.get('color', '')}"
             grosor_info = f"{material_info.get('grosor', '')}mm grosor"
             coste_material_con_iva = coste_material * 1.21
