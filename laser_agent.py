@@ -703,36 +703,41 @@ Parametros de corte:
 
         pdf.set_font("Arial", size=9)
 
-        # Servicio corte láser - usar variables ya calculadas
-        coste_corte_con_iva = coste_corte * 1.21
+        # Servicio corte láser - calcular con margen incluido
+        margen_beneficio = budget_data.get('margen_beneficio', 0)
+        coste_corte_con_margen = coste_corte + (margen_beneficio * coste_corte / (coste_corte + coste_material))
+        precio_minuto_con_margen = coste_corte_con_margen / tiempo_corte if tiempo_corte > 0 else 0
+        coste_corte_con_iva = coste_corte_con_margen * 1.21
 
-        print(f"[PDF DEBUG] Escribiendo servicio: precio={precio_minuto}, tiempo={tiempo_corte}, coste={coste_corte}")
+        print(f"[PDF DEBUG] Escribiendo servicio: precio={precio_minuto_con_margen:.2f}, tiempo={tiempo_corte}, coste={coste_corte_con_margen:.2f}")
         pdf.cell(80, 6, "Servicio corte láser - Barcelona", 1, 0, "L")
-        pdf.cell(20, 6, f"{precio_minuto:.2f}EUR", 1, 0, "C")
+        pdf.cell(20, 6, f"{precio_minuto_con_margen:.2f}EUR", 1, 0, "C")
         pdf.cell(20, 6, str(int(tiempo_corte)), 1, 0, "C")
-        pdf.cell(25, 6, f"{coste_corte:.2f}EUR", 1, 0, "C")
+        pdf.cell(25, 6, f"{coste_corte_con_margen:.2f}EUR", 1, 0, "C")
         pdf.cell(15, 6, "21%", 1, 0, "C")
         pdf.cell(25, 6, f"{coste_corte_con_iva:.2f}EUR", 1, 1, "C")
 
         pdf.cell(80, 4, "Aquí se presupuesta los minutos de corte láser", 1, 0, "L")
         pdf.cell(105, 4, "", 1, 1, "C")
 
-        # Material (si hay coste de material) - usar variable ya calculada
+        # Material (si hay coste de material) - calcular con margen incluido
         if coste_material > 0:
-            # Usar material_info que ya obtuvimos arriba
-            pass  # material_info ya está definido
+            # Calcular margen proporcional para el material
+            coste_material_con_margen = coste_material + (margen_beneficio * coste_material / (coste_corte + coste_material))
+            coste_material_con_iva = coste_material_con_margen * 1.21
+            
             material_nombre = f"Tablero {material_info.get('material', 'Material')} {material_info.get('color', '')}"
             grosor_info = f"{material_info.get('grosor', '')}mm grosor"
-            coste_material_con_iva = coste_material * 1.21
             
-            # Calcular precio unitario asumiendo 1 unidad por ahora
-            precio_unitario = coste_material
+            # Calcular precio unitario con margen
+            precio_unitario_con_margen = coste_material_con_margen
             unidades = 1
             
+            print(f"[PDF DEBUG] Escribiendo material: precio={precio_unitario_con_margen:.2f}, coste={coste_material_con_margen:.2f}")
             pdf.cell(80, 6, material_nombre, 1, 0, "L")
-            pdf.cell(20, 6, f"{precio_unitario:.2f}EUR", 1, 0, "C")
+            pdf.cell(20, 6, f"{precio_unitario_con_margen:.2f}EUR", 1, 0, "C")
             pdf.cell(20, 6, str(unidades), 1, 0, "C")
-            pdf.cell(25, 6, f"{coste_material:.2f}EUR", 1, 0, "C")
+            pdf.cell(25, 6, f"{coste_material_con_margen:.2f}EUR", 1, 0, "C")
             pdf.cell(15, 6, "21%", 1, 0, "C")
             pdf.cell(25, 6, f"{coste_material_con_iva:.2f}EUR", 1, 1, "C")
 
