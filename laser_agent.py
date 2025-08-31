@@ -384,13 +384,15 @@ Parametros de corte:
         """Normaliza nombres de material para buscar en la configuración"""
         material_lower = material.lower().strip()
         
-        # Mapear nombres del frontend a nombres en configuración
+        # Mapear nombres del frontend a nombres en configuración (actualizado para nueva base de datos)
         material_mapping = {
             'contrachapado': 'Contrachapado',
-            'mdf': 'MDF',
+            'mdf': 'Dm',  # MDF ahora es "Dm" en la base de datos
             'metacrilato': 'Metacrilato',
             'acrilico': 'Metacrilato',
-            'dm': 'DM'
+            'dm': 'Dm',  # DM ahora es "Dm" (solo primera mayúscula)
+            'madera balsa': 'Madera Balsa',
+            'cartón': 'Cartón'
         }
         
         return material_mapping.get(material_lower, material)
@@ -399,19 +401,22 @@ Parametros de corte:
         """Normaliza nombres de colores para buscar en la configuración"""
         color_lower = color.lower().strip()
         
-        # Mapear colores del frontend a colores en configuración
+        # Mapear colores del frontend a colores en configuración (actualizado para nueva base de datos)
         color_mapping = {
             'light-wood': 'light-wood',
             'dark-wood': 'dark-wood', 
             'madera-clara': 'light-wood',
             'madera-oscura': 'dark-wood',
-            'natural': 'light-wood',
+            'natural': 'natural',  # DM usa "natural", NO "light-wood"
             'transparente': 'Transparente',
             'negro': 'Negro',
-            'blanco': 'Blanco'
+            'blanco': 'Blanco',
+            'lila': 'Lila',
+            'azul': 'Azul',
+            'gris': 'Gris'
         }
         
-        return color_mapping.get(color_lower, color.title())
+        return color_mapping.get(color_lower, color)
 
     def calculate_budget_from_frontend(self, frontend_data: Dict[str, Any]) -> Dict[str, Any]:
         """Calcula presupuesto basado en JSON del formulario frontend"""
