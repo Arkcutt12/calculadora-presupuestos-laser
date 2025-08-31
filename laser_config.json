@@ -3,198 +3,759 @@
   "margen_beneficio": 50,
   "materiales": [
     {
-      "material": "MDF",
+      "material": "Dm",
       "grosor": 2.5,
-      "color": "light-wood",
-      "precio_plancha": 4.76,
+      "color": "natural",
+      "precio_plancha": 4.8,
       "tamaño_plancha": 0.6,
-      "dimensiones_plancha_mm": { "ancho": 1000, "alto": 600 },
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
       "velocidad_corte": 40,
       "potencia_laser": 80,
       "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 40, "power_pct": 80, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 60, "power_pct": 30, "air_bar": 0.4, "hatch_spacing_mm": 0.25, "fill_overhead_factor": 1.2 }
+        "cut": {
+          "speed_pct": 40,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     },
     {
-      "material": "MDF",
-      "grosor": 4,
-      "color": "light-wood",
-      "precio_plancha": 11.56,
-      "tamaño_plancha": 0.72,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 600 },
+      "material": "Dm",
+      "grosor": 3.0,
+      "color": "natural",
+      "precio_plancha": 6.0,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 30,
+      "potencia_laser": 80,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 30,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Dm",
+      "grosor": 4.0,
+      "color": "natural",
+      "precio_plancha": 11.66,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
       "velocidad_corte": 20,
       "potencia_laser": 100,
       "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 20, "power_pct": 100, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 55, "power_pct": 35, "air_bar": 0.5, "hatch_spacing_mm": 0.3, "fill_overhead_factor": 1.25 }
+        "cut": {
+          "speed_pct": 20,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     },
     {
-      "material": "Metacrilato",
-      "grosor": 2,
-      "color": "Transparente",
-      "precio_plancha": 39.96,
-      "tamaño_plancha": 1,
-      "dimensiones_plancha_mm": { "ancho": 1000, "alto": 1000 },
-      "velocidad_corte": 40,
-      "potencia_laser": 100,
-      "fuerza_aire": 0.6,
-      "process_params": {
-        "cut": { "speed_pct": 40, "power_pct": 100, "air_bar": 0.6 },
-        "engrave": { "speed_pct": 65, "power_pct": 25, "air_bar": 0.4, "hatch_spacing_mm": 0.2, "fill_overhead_factor": 1.2 }
-      }
-    },
-    {
-      "material": "Metacrilato",
-      "grosor": 5,
-      "color": "Transparente",
-      "precio_plancha": 81.45,
-      "tamaño_plancha": 1,
-      "dimensiones_plancha_mm": { "ancho": 1000, "alto": 1000 },
+      "material": "Dm",
+      "grosor": 5.0,
+      "color": "natural",
+      "precio_plancha": 13.48,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
       "velocidad_corte": 10,
       "potencia_laser": 100,
-      "fuerza_aire": 0.6,
+      "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 10, "power_pct": 100, "air_bar": 0.6 },
-        "engrave": { "speed_pct": 45, "power_pct": 35, "air_bar": 0.5, "hatch_spacing_mm": 0.3, "fill_overhead_factor": 1.25 }
+        "cut": {
+          "speed_pct": 10,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     },
     {
-      "material": "Metacrilato",
-      "grosor": 3,
-      "color": "Negro",
-      "precio_plancha": 45.00,
-      "tamaño_plancha": 1,
-      "dimensiones_plancha_mm": { "ancho": 1000, "alto": 1000 },
-      "velocidad_corte": 25,
+      "material": "Dm",
+      "grosor": 7.0,
+      "color": "natural",
+      "precio_plancha": 15.88,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 3,
       "potencia_laser": 100,
-      "fuerza_aire": 0.6,
+      "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 25, "power_pct": 100, "air_bar": 0.6 },
-        "engrave": { "speed_pct": 60, "power_pct": 30, "air_bar": 0.4, "hatch_spacing_mm": 0.25, "fill_overhead_factor": 1.2 }
+        "cut": {
+          "speed_pct": 3,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Dm",
+      "grosor": 10.0,
+      "color": "natural",
+      "precio_plancha": 22.93,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 3,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 3,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     },
     {
       "material": "Contrachapado",
-      "grosor": 3,
+      "grosor": 4.0,
       "color": "light-wood",
-      "precio_plancha": 18.00,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 33,
-      "potencia_laser": 85,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 33, "power_pct": 85, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 70, "power_pct": 40, "air_bar": 0.6, "hatch_spacing_mm": 0.3, "fill_overhead_factor": 1.3 }
-      }
-    },
-    {
-      "material": "Contrachapado",
-      "grosor": 4,
-      "color": "light-wood",
-      "precio_plancha": 21.50,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 28,
-      "potencia_laser": 87,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 28, "power_pct": 87, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 67, "power_pct": 42, "air_bar": 0.6, "hatch_spacing_mm": 0.32, "fill_overhead_factor": 1.32 }
-      }
-    },
-    {
-      "material": "Contrachapado",
-      "grosor": 6,
-      "color": "light-wood",
-      "precio_plancha": 25.00,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 23,
-      "potencia_laser": 90,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 23, "power_pct": 90, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 65, "power_pct": 45, "air_bar": 0.6, "hatch_spacing_mm": 0.35, "fill_overhead_factor": 1.35 }
-      }
-    },
-    {
-      "material": "Contrachapado",
-      "grosor": 3,
-      "color": "dark-wood",
-      "precio_plancha": 20.0,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 33,
-      "potencia_laser": 85,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 33, "power_pct": 85, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 70, "power_pct": 40, "air_bar": 0.6, "hatch_spacing_mm": 0.3, "fill_overhead_factor": 1.3 }
-      }
-    },
-    {
-      "material": "Contrachapado",
-      "grosor": 4,
-      "color": "dark-wood",
-      "precio_plancha": 23.5,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 28,
-      "potencia_laser": 87,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 28, "power_pct": 87, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 67, "power_pct": 42, "air_bar": 0.6, "hatch_spacing_mm": 0.32, "fill_overhead_factor": 1.32 }
-      }
-    },
-    {
-      "material": "Contrachapado",
-      "grosor": 6,
-      "color": "dark-wood",
-      "precio_plancha": 27.0,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 23,
-      "potencia_laser": 90,
-      "fuerza_aire": 0.8,
-      "process_params": {
-        "cut": { "speed_pct": 23, "power_pct": 90, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 65, "power_pct": 45, "air_bar": 0.6, "hatch_spacing_mm": 0.35, "fill_overhead_factor": 1.35 }
-      }
-    },
-    {
-      "material": "DM",
-      "grosor": 3,
-      "color": "Blanco",
-      "precio_plancha": 20.00,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 37,
+      "precio_plancha": 18.13,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 20,
       "potencia_laser": 80,
       "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 37, "power_pct": 80, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 75, "power_pct": 35, "air_bar": 0.5, "hatch_spacing_mm": 0.3, "fill_overhead_factor": 1.25 }
+        "cut": {
+          "speed_pct": 20,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     },
     {
-      "material": "DM",
-      "grosor": 6,
-      "color": "Blanco",
-      "precio_plancha": 28.00,
-      "tamaño_plancha": 1.44,
-      "dimensiones_plancha_mm": { "ancho": 1200, "alto": 1200 },
-      "velocidad_corte": 25,
-      "potencia_laser": 85,
+      "material": "Contrachapado",
+      "grosor": 5.0,
+      "color": "light-wood",
+      "precio_plancha": 20.68,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 15,
+      "potencia_laser": 95,
       "fuerza_aire": 0.8,
       "process_params": {
-        "cut": { "speed_pct": 25, "power_pct": 85, "air_bar": 0.8 },
-        "engrave": { "speed_pct": 70, "power_pct": 40, "air_bar": 0.5, "hatch_spacing_mm": 0.35, "fill_overhead_factor": 1.3 }
+        "cut": {
+          "speed_pct": 15,
+          "power_pct": 95,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Madera Balsa",
+      "grosor": 1.0,
+      "color": "light-wood",
+      "precio_plancha": 3.69,
+      "tamaño_plancha": 0.1,
+      "dimensiones_plancha_mm": {
+        "ancho": 100,
+        "alto": 1000
+      },
+      "velocidad_corte": 120,
+      "potencia_laser": 40,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 120,
+          "power_pct": 40,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 15,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Madera Balsa",
+      "grosor": 2.0,
+      "color": "light-wood",
+      "precio_plancha": 5.0,
+      "tamaño_plancha": 0.1,
+      "dimensiones_plancha_mm": {
+        "ancho": 100,
+        "alto": 1000
+      },
+      "velocidad_corte": 120,
+      "potencia_laser": 60,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 120,
+          "power_pct": 60,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Madera Balsa",
+      "grosor": 3.0,
+      "color": "light-wood",
+      "precio_plancha": 4.85,
+      "tamaño_plancha": 0.1,
+      "dimensiones_plancha_mm": {
+        "ancho": 100,
+        "alto": 1000
+      },
+      "velocidad_corte": 120,
+      "potencia_laser": 80,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 120,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Madera Balsa",
+      "grosor": 4.0,
+      "color": "light-wood",
+      "precio_plancha": 7.4,
+      "tamaño_plancha": 0.1,
+      "dimensiones_plancha_mm": {
+        "ancho": 100,
+        "alto": 1000
+      },
+      "velocidad_corte": 60,
+      "potencia_laser": 80,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 60,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Madera Balsa",
+      "grosor": 8.0,
+      "color": "light-wood",
+      "precio_plancha": 12.25,
+      "tamaño_plancha": 0.1,
+      "dimensiones_plancha_mm": {
+        "ancho": 100,
+        "alto": 1000
+      },
+      "velocidad_corte": 55,
+      "potencia_laser": 80,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 55,
+          "power_pct": 80,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 250,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 2.0,
+      "color": "Transparente",
+      "precio_plancha": 30.33,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 40,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 40,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 3.0,
+      "color": "Transparente",
+      "precio_plancha": 38.07,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 30,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 30,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 4.0,
+      "color": "Transparente",
+      "precio_plancha": 47.53,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 10,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 10,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 5.0,
+      "color": "Transparente",
+      "precio_plancha": 58.8,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 10,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 10,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 6.0,
+      "color": "Transparente",
+      "precio_plancha": 69.63,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 5,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 5,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 8.0,
+      "color": "Transparente",
+      "precio_plancha": 82.91,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 5,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 5,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 3.0,
+      "color": "Lila",
+      "precio_plancha": 41.6,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 30,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 30,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 3.0,
+      "color": "Lila",
+      "precio_plancha": 41.6,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 30,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 30,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 2.0,
+      "color": "Blanco",
+      "precio_plancha": 32.39,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 40,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 40,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 3.0,
+      "color": "Blanco",
+      "precio_plancha": 41.6,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 30,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 30,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 4.0,
+      "color": "Blanco",
+      "precio_plancha": 53.46,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 10,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 10,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 5.0,
+      "color": "Blanco",
+      "precio_plancha": 65.37,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 10,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 10,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 6.0,
+      "color": "Blanco",
+      "precio_plancha": 76.1,
+      "tamaño_plancha": 0.6,
+      "dimensiones_plancha_mm": {
+        "ancho": 600,
+        "alto": 1000
+      },
+      "velocidad_corte": 5,
+      "potencia_laser": 100,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 5,
+          "power_pct": 100,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
+      }
+    },
+    {
+      "material": "Metacrilato",
+      "grosor": 2.0,
+      "color": "Gris",
+      "precio_plancha": 6.32,
+      "tamaño_plancha": 0.7875,
+      "dimensiones_plancha_mm": {
+        "ancho": 750,
+        "alto": 1050
+      },
+      "velocidad_corte": 40,
+      "potencia_laser": 90,
+      "fuerza_aire": 0.8,
+      "process_params": {
+        "cut": {
+          "speed_pct": 40,
+          "power_pct": 90,
+          "air_bar": 0.8
+        },
+        "engrave": {
+          "speed_pct": 200,
+          "power_pct": 20,
+          "air_bar": 0.6,
+          "hatch_spacing_mm": 0.25,
+          "fill_overhead_factor": 1.2
+        }
       }
     }
   ]
