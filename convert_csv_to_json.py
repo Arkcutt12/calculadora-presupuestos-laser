@@ -33,7 +33,9 @@ def parse_thickness(thickness_str):
 def normalize_material_name(material_name):
     """Normaliza nombres de materiales"""
     material_name = material_name.upper()
-    if 'METACRILATO' in material_name and any(color in material_name for color in ['LILA', 'AZUL', 'BLANCO']):
+    if 'CARTÓN GRIS' in material_name:
+        return 'Cartón'
+    elif 'METACRILATO' in material_name and any(color in material_name for color in ['LILA', 'AZUL', 'BLANCO']):
         return 'Metacrilato'
     elif 'METACRILATO' in material_name:
         return 'Metacrilato'
@@ -41,8 +43,8 @@ def normalize_material_name(material_name):
         return 'Contrachapado'
     elif 'MADERA BALSA' in material_name:
         return 'Madera Balsa'
-    elif 'CARTÓN' in material_name:
-        return 'Cartón'
+    elif 'DM' in material_name:
+        return 'Dm'
     else:
         return material_name.title()
 
@@ -67,7 +69,7 @@ def extract_color(material_name, color_column):
         return color_column
 
 # Leer CSV y convertir
-csv_path = r"C:\Users\hiero\Downloads\Hoja de cálculo sin título - Hoja 1 (2).csv"
+csv_path = r"C:\Users\hiero\Downloads\Materiales - Hoja 1.csv"
 materiales = []
 
 with open(csv_path, 'r', encoding='utf-8') as file:
