@@ -141,13 +141,13 @@ class LaserCuttingAgent:
         """Parámetros de proceso para corte/gravado con valores por defecto y override desde JSON."""
         process = {
             'cut': {
-                'speed_pct': material_info.get('velocidad_corte') if isinstance(material_info.get('velocidad_corte'), (int, float)) else 25,
+                'speed_mm_s': material_info.get('velocidad_corte') if isinstance(material_info.get('velocidad_corte'), (int, float)) else 25,
                 'power_pct': material_info.get('potencia_laser', 90),
                 'air_bar': material_info.get('fuerza_aire', 0.8),
                 'overhead_factor': 1.05
             },
             'engrave': {
-                'speed_pct': 60,  # Valor por defecto
+                'speed_mm_s': 250,  # Valor por defecto en mm/s (más rápido que corte)
                 'power_pct': 30,  # Valor por defecto
                 'air_bar': 0.4,   # Valor por defecto
                 'hatch_spacing_mm': 0.25,  # Valor por defecto
@@ -160,13 +160,17 @@ class LaserCuttingAgent:
         if isinstance(pp, dict):
             for key in ('cut', 'engrave'):
                 if key in pp and isinstance(pp[key], dict):
-                    process[key].update(pp[key])
+                    # Convertir speed_pct a speed_mm_s si existe
+                    pp_updated = pp[key].copy()
+                    if 'speed_pct' in pp_updated:
+                        pp_updated['speed_mm_s'] = float(pp_updated.pop('speed_pct'))
+                    process[key].update(pp_updated)
         
         return process
 
-    def _speed_m_per_min(self, speed_pct: float) -> float:
-        """Convierte % de velocidad (100% = 300 mm/s) a m/min."""
-        velocidad_mm_s = (float(speed_pct) / 100.0) * 300.0
+    def _speed_m_per_min(self, speed_mm_s: float) -> float:
+        """Convierte velocidad en mm/s a m/min."""
+        velocidad_mm_s = float(speed_mm_s)  # Ya están en mm/s en el config
         return (velocidad_mm_s * 60.0) / 1000.0
 
     def calculate_layer_time_minutes(self, layer: Dict[str, Any], material_info: Dict[str, Any]) -> Dict[str, Any]:
@@ -192,14 +196,14 @@ class LaserCuttingAgent:
 
         if layer_type in ('cut_outside', 'cut_inside'):
             length_m = float(layer.get('length_m', 0) or 0)
-            v_m_min = self._speed_m_per_min(process['cut']['speed_pct'])
+            v_m_min = self._speed_m_per_min(process['cut']['speed_mm_s'])
             time_min = (length_m / v_m_min) * process['cut'].get('overhead_factor', 1.0) if v_m_min > 0 else 0
             breakdown['time_min'] = round(time_min, 3)
             return breakdown
 
         if layer_type == 'engrave_outline':
             length_m = float(layer.get('length_m', 0) or 0)
-            v_m_min = self._speed_m_per_min(process['engrave']['speed_pct'])
+            v_m_min = self._speed_m_per_min(process['engrave']['speed_mm_s'])
             outline_overhead = 1.08
             time_min = (length_m / v_m_min) * outline_overhead if v_m_min > 0 else 0
             breakdown['time_min'] = round(time_min, 3)
@@ -210,7 +214,7 @@ class LaserCuttingAgent:
             spacing_mm = float(layer.get('hatch_spacing_mm') or process['engrave']['hatch_spacing_mm'] or 0.25)
             spacing_m = spacing_mm / 1000.0
             total_length_m = (area_m2 / spacing_m) if spacing_m > 0 else 0
-            v_m_min = self._speed_m_per_min(process['engrave']['speed_pct'])
+            v_m_min = self._speed_m_per_min(process['engrave']['speed_mm_s'])
             time_min = (total_length_m / v_m_min) * process['engrave'].get('fill_overhead_factor', 1.2) if v_m_min > 0 else 0
             breakdown['length_m'] = round(total_length_m, 4)
             breakdown['time_min'] = round(time_min, 3)
@@ -577,8 +581,9 @@ Parametros de corte:
         process_params = {}
         
         for process_type, params in resolved_params.items():
+            speed_mm_s = params.get('speed_mm_s', 0)
             process_params[process_type] = {
-                'velocidad': f"{params.get('speed_pct', 0)}% ({round((params.get('speed_pct', 0) / 100) * 300, 1)} mm/s)",
+                'velocidad': f"{speed_mm_s} mm/s",
                 'potencia': f"{params.get('power_pct', 0)}%",
                 'aire': f"{params.get('air_bar', 0)} bar"
             }
